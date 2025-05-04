@@ -1,5 +1,28 @@
 plugins {
+    id 'application'
     id 'java'
+}
+
+application {
+    mainClass = 'ru.flow.httpserver.gui.ServerGUI'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'ru.flow.httpserver.gui.ServerGUI'
+    }
+
+    // Собираем "fat-jar" со всеми зависимостями
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    // Включаем ресурсы (если есть картинки/шрифты)
+    from sourceSets.main.resources
 }
 
 group = 'ru.flow.httpserver'
