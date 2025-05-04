@@ -23,4 +23,4 @@
 ### Запуск сервера
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/ваш-username/java-nio-http-server.git
+   git clone https://github.com/flow2708/HTTP-Server.git
