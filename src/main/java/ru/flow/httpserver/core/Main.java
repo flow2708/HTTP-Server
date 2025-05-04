@@ -1,10 +1,9 @@
 package ru.flow.httpserver.core;
 
-import java.io.IOException;
+import ru.flow.httpserver.gui.ServerGUI;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer();
-        httpServer.start();
+    public static void main(String[] args) {
+        ServerGUI.main(args);
     }
 }
