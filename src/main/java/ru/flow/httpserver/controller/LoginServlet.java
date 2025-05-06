@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
             if (isSaved) {
                 response.getWriter().println("Вы успешно зарегистрировались!");
             }
-            response.sendRedirect("src/main/resources/login.html");
+            response.sendRedirect("src/main/resources/page1.html");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
