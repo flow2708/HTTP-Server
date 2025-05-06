@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Java HTTP Server</title>
     <style>
         body { font-family: Arial; margin: 40px; }
@@ -15,6 +16,24 @@
 <script>
     document.getElementById('time').textContent = new Date();
 </script>
+<h2>Регистрация</h2>
+<form action="/register" method="POST">
+    <div>
+        <label for="username">Имя пользователя:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <button type="submit">Зарегистрироваться</button>
+    </div>
+</form>
 <footer>
     <h4>coded by flow</h4>
 </footer>
