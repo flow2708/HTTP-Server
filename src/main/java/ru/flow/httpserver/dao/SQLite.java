@@ -28,15 +28,16 @@ public class SQLite {
         }
     }
 
-    public boolean saveUser(String username, String email, String password) throws SQLException, ClassNotFoundException {
+    public boolean saveUser(String username, String email, String password, int balance) throws SQLException, ClassNotFoundException {
         try {
-            String insertUser = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+            String insertUser = "INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, ?)";
             connect();
 
             prstatmt = connection.prepareStatement(insertUser);
             prstatmt.setString(1, username);
             prstatmt.setString(2, email);
             prstatmt.setString(3, password);
+            prstatmt.setInt(4, balance);
             prstatmt.executeUpdate();
             return true;
 
