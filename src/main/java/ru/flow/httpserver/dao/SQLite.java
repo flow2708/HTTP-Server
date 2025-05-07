@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class SQLite {
     private static final String DB_URL = "jdbc:sqlite:" +
-            System.getProperty("catalina.base") + "/webapps/demo/WEB-INF/database.db";
+            System.getProperty("catalina.base") + "/webapps/demo/WEB-INF/classes/database.db";
     private static Connection connection;
     private static PreparedStatement prstatmt;
     private static ResultSet resSet;
@@ -27,7 +27,6 @@ public class SQLite {
     // Метод для создания таблицы users
     private static void createUsersTable() throws SQLException {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS users ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "username TEXT NOT NULL UNIQUE,"
                 + "email TEXT NOT NULL,"
                 + "password TEXT NOT NULL,"

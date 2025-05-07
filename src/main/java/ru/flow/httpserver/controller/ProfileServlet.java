@@ -13,20 +13,20 @@ import java.io.PrintWriter;
 
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
 
-        HttpSession session = request.getSession(false);
+        HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.html");
+            resp.sendRedirect("login.html");
             return;
         }
 
         User user = (User) session.getAttribute("user");
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println("<h1>Профиль</h1>");
-        out.println("<p>Имя: " + user.getUsername() + "</p>");
+        resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();
+        out.println("<h2>Ваши данные:</h2>");
+        out.println("<p>Логин: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
     }
 }
