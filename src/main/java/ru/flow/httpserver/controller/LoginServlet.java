@@ -11,7 +11,7 @@ import ru.flow.httpserver.entities.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
+/** Пока что не используется, post запрос обрабатывается в HttpHandler **/
 @WebServlet("/register")
 public class LoginServlet extends HttpServlet {
     @Override
@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
                 if (password.equals(existingUser.getPassword())) {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", existingUser);
-                    response.sendRedirect("src/main/resources/welcome.html");
+                    response.sendRedirect("src/main/resources/profile.html");
                 } else {
                     response.sendError(401, "Неверный пароль");
                 }
@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
                 User newUser = new User(username, email, password, 0);
                 HttpSession session = request.getSession();
                 session.setAttribute("user", newUser);
-                response.sendRedirect("src/main/resources/welcome.html");
+                response.sendRedirect("src/main/resources/profile.html");
             } else {
                 response.sendError(500, "Ошибка при регистрации");
             }
