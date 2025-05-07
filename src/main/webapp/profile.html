@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Профиль</title>
+</head>
+<body>
+<h1>Добро пожаловать!</h1>
+<div id="user-data">
+    <!-- Данные будут подставлены через JavaScript -->
+</div>
+<script>
+    // Получаем данные из сессии
+    fetch('/demo/profile')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('user-data').innerHTML = html;
+        });
+</script>
+</body>
+</html>

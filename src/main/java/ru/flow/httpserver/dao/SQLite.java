@@ -3,57 +3,71 @@ package ru.flow.httpserver.dao;
 import ru.flow.httpserver.entities.User;
 
 import java.sql.*;
-import java.util.Scanner;
 
 public class SQLite {
-    private static String dbPath = "jdbc:sqlite:src/main/resources/database.db";
+    private static final String DB_URL = "jdbc:sqlite:" +
+            System.getProperty("catalina.base") + "/webapps/demo/WEB-INF/database.db";
     private static Connection connection;
-    private static Statement statmt;
     private static PreparedStatement prstatmt;
     private static ResultSet resSet;
-    private String username;
-    private String email;
-    private String password;
 
+    // Инициализация соединения и создание таблицы при первом подключении
     public static void connect() throws ClassNotFoundException, SQLException {
         try {
-            connection = null;
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection(dbPath);
-            statmt = connection.createStatement();
-
-            System.out.println("База Подключена!");
+            connection = DriverManager.getConnection(DB_URL);
+            createUsersTable(); // Создаём таблицу при подключении
+            System.out.println("База подключена и таблицы проверены!");
         } catch (SQLException e) {
-            System.out.println("Не удалось подключиться к базе данных");
+            System.err.println("Ошибка подключения к базе данных: " + e.getMessage());
+            throw e;
         }
     }
 
-    public boolean saveUser(String username, String email, String password, int balance) throws SQLException, ClassNotFoundException {
-        try {
-            String insertUser = "INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, ?)";
-            connect();
+    // Метод для создания таблицы users
+    private static void createUsersTable() throws SQLException {
+        String createTableSQL = "CREATE TABLE IF NOT EXISTS users ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "username TEXT NOT NULL UNIQUE,"
+                + "email TEXT NOT NULL,"
+                + "password TEXT NOT NULL,"
+                + "balance INTEGER DEFAULT 0)";
 
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(createTableSQL);
+            System.out.println("Таблица users проверена/создана");
+        }
+    }
+
+    public boolean saveUser(String username, String email, String password, int balance) {
+        String insertUser = "INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, ?)";
+
+        try {
+            connect(); // Убедимся, что соединение установлено
             prstatmt = connection.prepareStatement(insertUser);
             prstatmt.setString(1, username);
             prstatmt.setString(2, email);
             prstatmt.setString(3, password);
             prstatmt.setInt(4, balance);
-            prstatmt.executeUpdate();
-            return true;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            int affectedRows = prstatmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Ошибка при сохранении пользователя: " + e.getMessage());
             return false;
+        } finally {
+            closeStatement(prstatmt);
         }
     }
-    public User findByUsername(String username) throws ClassNotFoundException {
+
+    public User findByUsername(String username) {
         String findUser = "SELECT * FROM users WHERE username = ?";
 
         try {
-            connect();
+            connect(); // Убедимся, что соединение установлено
             prstatmt = connection.prepareStatement(findUser);
             prstatmt.setString(1, username);
-             resSet = prstatmt.executeQuery();
+            resSet = prstatmt.executeQuery();
 
             if (resSet.next()) {
                 return new User(
@@ -63,10 +77,33 @@ public class SQLite {
                         resSet.getInt("balance")
                 );
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Ошибка при поиске пользователя: " + e.getMessage());
+        } finally {
+            closeResultSet(resSet);
+            closeStatement(prstatmt);
         }
         return null;
     }
-}
 
+    // Вспомогательные методы для закрытия ресурсов
+    private static void closeStatement(PreparedStatement stmt) {
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                System.err.println("Ошибка при закрытии statement: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void closeResultSet(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                System.err.println("Ошибка при закрытии result set: " + e.getMessage());
+            }
+        }
+    }
+}
