@@ -17,3 +17,15 @@ war {
     archiveFileName = 'demo.war'  // Имя WAR-файла
     from 'src/main/webapp'       // Включаем статические файлы
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'  // Указываем кодировку для компиляции
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
