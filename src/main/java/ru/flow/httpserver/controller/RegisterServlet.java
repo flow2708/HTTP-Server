@@ -9,30 +9,29 @@ import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
 import java.io.IOException;
-
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/register")
+public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         String username = req.getParameter("username");
+        String email = req.getParameter("email");
         String password = req.getParameter("password");
 
         try {
             SQLite db = new SQLite();
-            User user = db.findByUsername(username);
 
-            if (user == null) {
-                resp.sendRedirect("login.html?error=not_found");
+            if (db.findByUsername(username) != null) {
+                resp.sendRedirect("register.html?error=exists");
                 return;
             }
 
-            if (!user.getPassword().equals(password)) {
-                resp.sendRedirect("login.html?error=wrong_pass");
+            if (!db.saveUser(username, email, password, 0)) {
+                resp.sendRedirect("register.html?error=save_failed");
                 return;
             }
 
-            req.getSession().setAttribute("user", user);
+            req.getSession().setAttribute("user", new User(username, email, password, 0));
             resp.sendRedirect("profile");
 
         } catch (Exception e) {

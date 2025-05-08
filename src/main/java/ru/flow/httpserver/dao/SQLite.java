@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class SQLite {
     private static final String DB_URL = "jdbc:sqlite:" +
-            System.getProperty("catalina.base") + "/webapps/demo/WEB-INF/classes/database.db";
+            System.getProperty("catalina.base") + "/webapps/demo/WEB-INF/database.db";
     private static Connection connection;
     private static PreparedStatement prstatmt;
     private static ResultSet resSet;

@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Регистрация</title>
-</head>
-<body>
-<h1>Регистрация</h1>
-<form action="register" method="POST">
-  <input type="text" name="username" placeholder="Логин" required><br>
-  <input type="email" name="email" placeholder="Email" required><br>
-  <input type="password" name="password" placeholder="Пароль" required><br>
+<form action="register" method="POST" xmlns:th="http://www.w3.org/1999/xhtml">
+  <input type="text" name="username" placeholder="Логин" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="password" name="password" placeholder="Пароль" required>
   <button type="submit">Зарегистрироваться</button>
+  <a href="login.html">Уже есть аккаунт?</a>
+
+  <div th:if="${param.error}">
+    <p style="color:red" th:switch="${param.error}">
+      <span th:case="exists">Логин уже занят</span>
+      <span th:case="save_failed">Ошибка регистрации</span>
+    </p>
+  </div>
 </form>
-<p>Уже зарегистрированы? <a href="login.html">Войдите</a></p>
-</body>
-</html>
