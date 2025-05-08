@@ -14,19 +14,22 @@ import java.io.PrintWriter;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws ServletException, IOException {
 
+        // Проверка авторизации
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if(session == null || session.getAttribute("user") == null) {
             resp.sendRedirect("login.html");
             return;
         }
 
+        // Отображение профиля
         User user = (User) session.getAttribute("user");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        out.println("<h2>Ваши данные:</h2>");
+        out.println("<h1>Ваш профиль</h1>");
         out.println("<p>Логин: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
+        out.println("<a href='index'>Выйти</a>");
     }
 }
