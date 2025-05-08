@@ -30,6 +30,6 @@ public class ProfileServlet extends HttpServlet {
         out.println("<h1>Ваш профиль</h1>");
         out.println("<p>Логин: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
-        out.println("<a href='index'>Выйти</a>");
+        out.println("<a href='index.html'>Выйти</a>");
     }
 }
