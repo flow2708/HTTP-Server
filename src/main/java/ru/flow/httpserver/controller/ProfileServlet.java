@@ -18,11 +18,20 @@ public class ProfileServlet extends HttpServlet {
 
         // Проверка авторизации
         HttpSession session = req.getSession(false);
+        Integer visitCounter = (Integer) session.getAttribute("visitCounter");
+
         if(session == null || session.getAttribute("user") == null) {
             resp.sendRedirect("login.html");
             return;
         }
 
+        if (visitCounter == null) {
+            visitCounter = 1;
+        } else {
+            visitCounter++;
+        }
+
+        session.setAttribute("visitCounter", visitCounter);
         // Отображение профиля
         User user = (User) session.getAttribute("user");
         resp.setContentType("text/html");
@@ -30,5 +39,6 @@ public class ProfileServlet extends HttpServlet {
         out.println("<h1>Ваш профиль</h1>");
         out.println("<p>Имя пользователя: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
+        out.println("Страница посещена " + visitCounter + " раз");
     }
 }
