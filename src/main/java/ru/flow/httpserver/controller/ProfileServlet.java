@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServleException, IOException {
+            throws ServletException, IOException {
 
         // Проверка авторизации
         HttpSession session = req.getSession(false);
