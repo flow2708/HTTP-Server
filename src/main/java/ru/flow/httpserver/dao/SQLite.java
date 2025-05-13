@@ -2,11 +2,11 @@ package ru.flow.httpserver.dao;
 
 import ru.flow.httpserver.entities.User;
 
+import java.io.File;
 import java.sql.*;
 
 public class SQLite {
-    private static final String DB_URL = "jdbc:sqlite:" +
-            System.getProperty("catalina.base") + "/webapps/demo/WEB-INF/database.db";
+    private static final String DB_URL = "jdbc:sqlite:C:/httpserverDB/database.db";
     private static Connection connection;
     private static PreparedStatement prstatmt;
     private static ResultSet resSet;
@@ -14,6 +14,20 @@ public class SQLite {
     // Инициализация соединения и создание таблицы при первом подключении
     public static void connect() throws ClassNotFoundException, SQLException {
         try {
+            String folderPath = "C:/httpserverDB";
+            File folder = new File(folderPath);
+
+            if (!folder.exists()) {
+                boolean createrd = folder.mkdir();
+                if (createrd) {
+                    System.out.println("Папка httpserverDB создана на диске C");
+                } else {
+                    System.out.println("Не удалось создать папку: " + folderPath);
+                }
+            } else {
+                System.out.println("Папка уже существует: " + folderPath);
+            }
+
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(DB_URL);
             createUsersTable(); // Создаём таблицу при подключении
