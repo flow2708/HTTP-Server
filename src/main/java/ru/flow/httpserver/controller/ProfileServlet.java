@@ -36,10 +36,6 @@ public class ProfileServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        out.println("<form action=\"/search\" method=\"GET\">\n" +
-                "  <input type=\"text\" name=\"query\" placeholder=\"Поиск...\">\n" +
-                "  <button type=\"submit\">Искать</button>\n" +
-                "</form>\n");
         out.println("<h1>Ваш профиль</h1>");
         out.println("<p>Имя пользователя: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
