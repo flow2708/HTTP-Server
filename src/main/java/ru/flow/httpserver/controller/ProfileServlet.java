@@ -10,6 +10,7 @@ import ru.flow.httpserver.entities.User;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
@@ -18,7 +19,10 @@ public class ProfileServlet extends HttpServlet {
 
         // Проверка авторизации
         HttpSession session = req.getSession(false);
+
         Integer visitCounter = (Integer) session.getAttribute("visitCounter");
+        long lastAccessTime = session.getLastAccessedTime();
+        Date lastAccessDate = new Date(lastAccessTime);
 
         if(session == null || session.getAttribute("user") == null) {
             resp.sendRedirect("login.html");
@@ -39,6 +43,7 @@ public class ProfileServlet extends HttpServlet {
         out.println("<h1>Ваш профиль</h1>");
         out.println("<p>Имя пользователя: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
+        out.println("Последний доступ к сессии: " + lastAccessDate + "\n");
         out.println("Страница посещена " + visitCounter + " раз");
     }
 }
