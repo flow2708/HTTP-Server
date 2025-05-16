@@ -18,7 +18,6 @@ public class LoginServlet extends HttpServlet {
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        String hashPassword = PasswordUtils.hashPassword(password);
         try {
             SQLite db = new SQLite();
             User user = db.findByUsername(username);
