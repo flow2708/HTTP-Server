@@ -27,6 +27,13 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
+            try {
+                PasswordUtils.validate(password);
+            } catch (IllegalArgumentException e) {
+                resp.sendRedirect("login.html?error=incorrect_password_format");
+                return;
+            }
+
             if (!PasswordUtils.checkPassword(password, user.getPassword())) {
                 resp.sendRedirect("login.html?error=wrong_pass");
                 return;
