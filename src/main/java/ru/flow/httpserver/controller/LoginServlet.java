@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.flow.httpserver.Utils.PasswordUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
@@ -17,7 +18,7 @@ public class LoginServlet extends HttpServlet {
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-
+        String hashPassword = PasswordUtils.hashPassword(password);
         try {
             SQLite db = new SQLite();
             User user = db.findByUsername(username);
@@ -27,7 +28,7 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            if (!user.getPassword().equals(password)) {
+            if (!PasswordUtils.checkPassword(password, user.getPassword())) {
                 resp.sendRedirect("login.html?error=wrong_pass");
                 return;
             }

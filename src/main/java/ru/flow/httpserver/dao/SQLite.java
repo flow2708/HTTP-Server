@@ -1,5 +1,6 @@
 package ru.flow.httpserver.dao;
 
+import ru.flow.httpserver.Utils.PasswordUtils;
 import ru.flow.httpserver.entities.User;
 
 import java.io.File;
@@ -54,13 +55,14 @@ public class SQLite {
 
     public boolean saveUser(String username, String email, String password, int balance) {
         String insertUser = "INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, ?)";
+        String hashedPassword = PasswordUtils.hashPassword(password);
 
         try {
             connect(); // Убедимся, что соединение установлено
             prstatmt = connection.prepareStatement(insertUser);
             prstatmt.setString(1, username);
             prstatmt.setString(2, email);
-            prstatmt.setString(3, password);
+            prstatmt.setString(3, hashedPassword);
             prstatmt.setInt(4, balance);
 
             int affectedRows = prstatmt.executeUpdate();
