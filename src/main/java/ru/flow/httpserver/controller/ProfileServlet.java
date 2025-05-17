@@ -43,7 +43,8 @@ public class ProfileServlet extends HttpServlet {
         out.println("<h1>Ваш профиль</h1>");
         out.println("<p>Имя пользователя: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
-        out.println("Последний доступ к сессии: " + lastAccessDate + "\n");
-        out.println("Страница посещена " + visitCounter + " раз");
+        out.println("<p>Баланс: " + user.getBalance() + "</p>");
+        out.println("<p>Последний доступ к сессии: " + lastAccessDate + "</p>");
+        out.println("<p>Страница посещена " + visitCounter + " раз</p>");
     }
 }
