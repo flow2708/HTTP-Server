@@ -5,12 +5,12 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private int balance;
-    public User(String username,String email, String password, int balance) {
+    private int socialrating;
+    public User(String username,String email, String password, int socialrating) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.balance = balance;
+        this.socialrating = socialrating;
     }
     public String getUsername() {
         return this.username;
@@ -21,7 +21,7 @@ public class User {
     public String getPassword() {
         return this.password;
     }
-    public int getBalance() {
-        return this.balance;
+    public int getSocialRating() {
+        return this.socialrating;
     }
 }

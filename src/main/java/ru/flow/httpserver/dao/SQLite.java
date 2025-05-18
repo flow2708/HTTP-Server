@@ -45,7 +45,7 @@ public class SQLite {
                 + "username TEXT NOT NULL UNIQUE,"
                 + "email TEXT NOT NULL,"
                 + "password TEXT NOT NULL,"
-                + "balance INTEGER DEFAULT 0)";
+                + "socialrating INTEGER DEFAULT 0)";
 
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(createTableSQL);
@@ -53,8 +53,8 @@ public class SQLite {
         }
     }
 
-    public boolean saveUser(String username, String email, String password, int balance) {
-        String insertUser = "INSERT INTO users (username, email, password, balance) VALUES (?, ?, ?, ?)";
+    public boolean saveUser(String username, String email, String password, int socialrating) {
+        String insertUser = "INSERT INTO users (username, email, password, socialrating) VALUES (?, ?, ?, ?)";
         String hashedPassword = PasswordUtils.hashPassword(password);
 
         try {
@@ -63,7 +63,7 @@ public class SQLite {
             prstatmt.setString(1, username);
             prstatmt.setString(2, email);
             prstatmt.setString(3, hashedPassword);
-            prstatmt.setInt(4, balance);
+            prstatmt.setInt(4, socialrating);
 
             int affectedRows = prstatmt.executeUpdate();
             return affectedRows > 0;
@@ -89,7 +89,7 @@ public class SQLite {
                         resSet.getString("username"),
                         resSet.getString("email"),
                         resSet.getString("password"),
-                        resSet.getInt("balance")
+                        resSet.getInt("socialrating")
                 );
             }
         } catch (SQLException | ClassNotFoundException e) {
