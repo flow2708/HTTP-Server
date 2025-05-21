@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
             }
 
             req.getSession().setAttribute("user", user);
-            resp.sendRedirect("profile");
+            resp.sendRedirect("mainpage.html");
 
         } catch (Exception e) {
             resp.sendRedirect("error500.html");

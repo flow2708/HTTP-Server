@@ -40,7 +40,6 @@ public class ProfileServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        out.println("<h1>Ваш профиль</h1>");
         out.println("<p>Имя пользователя: " + user.getUsername() + "</p>");
         out.println("<p>Email: " + user.getEmail() + "</p>");
         out.println("<p>Социальный рейтинг: " + user.getSocialRating() + "</p>");

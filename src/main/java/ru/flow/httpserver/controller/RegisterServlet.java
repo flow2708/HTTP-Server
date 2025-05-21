@@ -32,7 +32,7 @@ public class RegisterServlet extends HttpServlet {
             }
 
             req.getSession().setAttribute("user", new User(username, email, password, 0));
-            resp.sendRedirect("profile");
+            resp.sendRedirect("mainpage.html");
 
         } catch (Exception e) {
             resp.sendRedirect("error500.html");
