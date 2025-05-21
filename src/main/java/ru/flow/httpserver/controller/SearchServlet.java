@@ -10,6 +10,6 @@ import java.io.IOException;
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+
     }
 }
