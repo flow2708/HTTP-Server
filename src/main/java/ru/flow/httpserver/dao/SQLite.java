@@ -149,7 +149,7 @@ public class SQLite {
     // Отклонить запрос
     public boolean rejectFriendRequest(int requestId, String receiver) throws SQLException, ClassNotFoundException {
         connect();
-
+        
         String sql = "UPDATE friend_requests SET status = 'REJECTED' " +
                 "WHERE id = ? AND receiver = ? AND status = 'PENDING'";
 

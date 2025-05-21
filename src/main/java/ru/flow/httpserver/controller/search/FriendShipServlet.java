@@ -36,7 +36,7 @@ public class FriendShipServlet extends HttpServlet {
             case "accept_request":
                 requestId = req.getParameter("request_id");
                 try {
-                    db.acceptFriendRequest(Integer.parseInt(requestId), targetUsername);
+                    db.acceptFriendRequest(Integer.parseInt(requestId), currentUser.getUsername());
                 } catch (SQLException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
@@ -44,7 +44,7 @@ public class FriendShipServlet extends HttpServlet {
             case "reject_request":
                 requestId = req.getParameter("request_id");
                 try {
-                    db.rejectFriendRequest(Integer.parseInt(requestId), targetUsername);
+                    db.rejectFriendRequest(Integer.parseInt(requestId), currentUser.getUsername());
                 } catch (SQLException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
