@@ -1,10 +1,11 @@
-package ru.flow.httpserver.controller;
+package ru.flow.httpserver.controller.authorization;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.flow.httpserver.Utils.PasswordUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
@@ -23,6 +24,13 @@ public class RegisterServlet extends HttpServlet {
 
             if (db.findByUsername(username) != null) {
                 resp.sendRedirect("register.html?error=exists");
+                return;
+            }
+
+            try {
+                PasswordUtils.validate(password);
+            } catch (IllegalArgumentException e) {
+                resp.sendRedirect("login.html?error=incorrect_password_format");
                 return;
             }
 

@@ -1,16 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Главная страница</title>
-    <a href="profile.html">Мой профиль</a>
-
-    <form action="search" method="GET">
-        <input type="text" name="query" placeholder="Поиск...">
-        <button type="submit">Искать</button>
-    </form>
+    <style>
+        .search-box { margin: 20px; padding: 10px; border: 1px solid #ccc; }
+    </style>
 </head>
 <body>
+<div class="header">
+    <a href="profile">Мой профиль</a>
+</div>
 
+<div class="search-box">
+    <form action="search" method="GET">
+        <input type="text" name="query" placeholder="Поиск пользователей..." required>
+        <button type="submit">Найти</button>
+    </form>
+</div>
+
+<div class="notifications">
+    <!-- Здесь можно выводить уведомления о запросах в друзья -->
+</div>
 </body>
 </html>

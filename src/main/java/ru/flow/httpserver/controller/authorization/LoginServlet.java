@@ -1,4 +1,4 @@
-package ru.flow.httpserver.controller;
+package ru.flow.httpserver.controller.authorization;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
