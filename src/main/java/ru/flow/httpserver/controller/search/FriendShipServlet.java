@@ -9,6 +9,7 @@ import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 @WebServlet("/friendship")
@@ -20,15 +21,19 @@ public class FriendShipServlet extends HttpServlet {
         String requestId;
         HttpSession session = req.getSession();
         User currentUser = (User) session.getAttribute("user");
+        PrintWriter out = resp.getWriter();
 
         if (currentUser == null) {
             resp.sendRedirect("register.html");
         }
 
+        resp.setContentType("text/html;charset=UTF-8");
+
         switch (action) {
             case "send_request":
                 try {
                     db.sendFriendRequest(currentUser.getUsername(), targetUsername);
+                    out.println("<p>Запрос дружбы отправлен!</p>");
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -37,6 +42,7 @@ public class FriendShipServlet extends HttpServlet {
                 requestId = req.getParameter("request_id");
                 try {
                     db.acceptFriendRequest(Integer.parseInt(requestId), currentUser.getUsername());
+                    out.println("<p>Запрос в друзья принят!</p>");
                 } catch (SQLException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
@@ -45,6 +51,7 @@ public class FriendShipServlet extends HttpServlet {
                 requestId = req.getParameter("request_id");
                 try {
                     db.rejectFriendRequest(Integer.parseInt(requestId), currentUser.getUsername());
+                    out.println("<p>Запрос в друзья отклонен!</p>");
                 } catch (SQLException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
@@ -53,6 +60,7 @@ public class FriendShipServlet extends HttpServlet {
                 requestId = req.getParameter("request_id");
                 try {
                     db.cancelFriendRequest(Integer.parseInt(requestId), currentUser.getUsername());
+                    out.println("<p>Запрос в друзья отменён!</p>");
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -60,6 +68,7 @@ public class FriendShipServlet extends HttpServlet {
             case "remove_friend":
                 try {
                     db.removeFriend(currentUser.getUsername(), targetUsername);
+                    out.println("<p>Пользователь удалён из друзей!</p>");
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

@@ -5,6 +5,8 @@ import ru.flow.httpserver.entities.User;
 
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLite {
     private static final String DB_URL = "jdbc:sqlite:C:/httpserverDB/database.db";
@@ -169,7 +171,7 @@ public class SQLite {
         }
     }
     public boolean removeFriend(String user1, String user2) throws SQLException {
-        String sql = "DELETE FROM friend_request WHERE " +
+        String sql = "DELETE FROM friend_requests WHERE " +
                 "((sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?)) " +
                 "AND status = 'ACCEPTED'";
 
@@ -233,6 +235,23 @@ public class SQLite {
             stmt.setString(2, receiver);
             return stmt.executeQuery().next();
         }
+    }
+    public List<String> getFriendRequestSenders(String receiver) throws SQLException, ClassNotFoundException {
+        List<String> senders = new ArrayList<>();
+        String sql = "SELECT sender FROM friend_requests WHERE receiver = ? AND status = 'PENDING'";
+
+        connect(); // Убедимся, что соединение установлено
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, receiver);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                senders.add(rs.getString("sender"));
+            }
+        }
+
+        return senders;
     }
     // Вспомогательные методы для закрытия ресурсов
     private static void closeStatement(PreparedStatement stmt) {

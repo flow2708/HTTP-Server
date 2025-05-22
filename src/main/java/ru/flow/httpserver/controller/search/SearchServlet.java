@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import ru.flow.httpserver.Utils.HtmlEscapingUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
@@ -61,10 +62,10 @@ public class SearchServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
 
         out.println("<!DOCTYPE html>");
-        out.println("<html><head><title>Профиль " + escapeHtml(foundUser.getUsername()) + "</title></head><body>");
+        out.println("<html><head><title>Профиль " + HtmlEscapingUtils.escapeHtml(foundUser.getUsername()) + "</title></head><body>");
         out.println("<h2>Профиль пользователя</h2>");
-        out.println("<p>Имя: " + escapeHtml(foundUser.getUsername()) + "</p>");
-        out.println("<p>Рейтинг: " + foundUser.getSocialRating() + "</p>");
+        out.println("<p>Имя: " + HtmlEscapingUtils.escapeHtml(foundUser.getUsername()) + "</p>");
+        out.println("<p>Социальный рейтинг: " + foundUser.getSocialRating() + "</p>");
 
         // Блок управления дружбой
         out.println("<div class='friendship-actions'>");
@@ -72,7 +73,7 @@ public class SearchServlet extends HttpServlet {
             case "NOT_EXISTS":
                 out.println("<form action='friendship' method='POST'>");
                 out.println("<input type='hidden' name='action' value='send_request'>");
-                out.println("<input type='hidden' name='target' value='" + escapeHtml(foundUser.getUsername()) + "'>");
+                out.println("<input type='hidden' name='target' value='" + HtmlEscapingUtils.escapeHtml(foundUser.getUsername()) + "'>");
                 out.println("<button type='submit'>Добавить в друзья</button>");
                 out.println("</form>");
                 break;
@@ -120,7 +121,7 @@ public class SearchServlet extends HttpServlet {
                 out.println("<p>У вас в друзьях</p>");
                 out.println("<form action='friendship' method='POST'>");
                 out.println("<input type='hidden' name='action' value='remove_friend'>");
-                out.println("<input type='hidden' name='target' value='" + escapeHtml(foundUser.getUsername()) + "'>");
+                out.println("<input type='hidden' name='target' value='" + HtmlEscapingUtils.escapeHtml(foundUser.getUsername()) + "'>");
                 out.println("<button type='submit'>Удалить из друзей</button>");
                 out.println("</form>");
                 break;
@@ -129,7 +130,7 @@ public class SearchServlet extends HttpServlet {
                 out.println("<p>Вы отклонили запрос</p>");
                 out.println("<form action='friendship' method='POST'>");
                 out.println("<input type='hidden' name='action' value='send_request'>");
-                out.println("<input type='hidden' name='target' value='" + escapeHtml(foundUser.getUsername()) + "'>");
+                out.println("<input type='hidden' name='target' value='" + HtmlEscapingUtils.escapeHtml(foundUser.getUsername()) + "'>");
                 out.println("<button type='submit'>Отправить запрос</button>");
                 out.println("</form>");
                 break;
@@ -140,12 +141,5 @@ public class SearchServlet extends HttpServlet {
     }
 
     // Метод для экранирования HTML
-    private String escapeHtml(String input) {
-        if (input == null) return "";
-        return input.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
-    }
+
 }
