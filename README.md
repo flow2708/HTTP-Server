@@ -26,15 +26,14 @@
 ### Требования
 - **JDK 21** (LTS версия)
 - **Gradle 8.5+**
-
+- **Apache Tomcat 10.1.40**
 ### Стандартный запуск
 1. Клонируйте репозиторий:
    ```bash
    git clone https://github.com/flow2708/HTTP-Server.git
    cd HTTP-Server
-2. Запустите сервер через Gradle:
-   ```bash
-   ./gradlew run
+2. Запустите сервер через конфигурацию Apache Tomcat:
+
 Сервер автоматически запустится на:
    ```bash
    http://localhost:8080
