@@ -32,7 +32,7 @@
    ```bash
    git clone https://github.com/flow2708/HTTP-Server.git
    cd HTTP-Server
-2. Запустите сервер через конфигурацию Apache Tomcat:
+2. Запустите сервер через конфигурацию Apache Tomcat в Intellij Idea
 
 Сервер автоматически запустится на:
    ```bash
