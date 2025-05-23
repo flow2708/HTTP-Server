@@ -161,7 +161,7 @@ public class SQLite {
             return stmt.executeUpdate() > 0;
         }
     }
-    public boolean cancelFriendRequest(int requestId, String senderUsername) throws SQLException {
+    public boolean cancelFriendRequest(int requetId, String senderUsername) throws SQLException {
         String sql = "DELETE FROM friend_requests WHERE id = ? AND sender = ? AND status = 'PENDING'";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
