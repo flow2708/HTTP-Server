@@ -21,38 +21,49 @@ public class NotificationsServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User currentUser = (User) session.getAttribute("user");
         PrintWriter out = resp.getWriter();
-        List<String> requests;
 
         if(currentUser == null) {
             resp.sendRedirect("register.html");
+            return; // Добавлен return для прерывания выполнения
         }
 
         try {
-            requests = db.getFriendRequestSenders(currentUser.getUsername());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+            List<String> requests = db.getFriendRequestSenders(currentUser.getUsername());
+            resp.setContentType("text/html;charset=UTF-8");
 
-        resp.setContentType("text/html;charset=UTF-8");
+            if(requests.isEmpty()) {
+                out.println("<p>Нет новых уведомлений</p>");
+                return;
+            }
 
-        for (String sender : requests) {
-            try {
+            for (String sender : requests) {
                 int requestId = db.getRequestId(sender, currentUser.getUsername());
 
-                out.println("<div class='sender'>");
-                out.println("<p>" + sender + "</p>");
+                if(requestId == -1) continue; // Пропускаем невалидные запросы
+
+                out.println("<div class='notification-item'>");
+                out.println("<p>Запрос от: " + HtmlEscapingUtils.escapeHtml(sender) + "</p>");
+
+                // Форма принятия
                 out.println("<form action='friendship' method='POST'>");
                 out.println("<input type='hidden' name='action' value='accept_request'>");
                 out.println("<input type='hidden' name='request_id' value='" + requestId + "'>");
-                out.println("<button type='submit' class='active-button'>Принять</button>");
+                out.println("<button type='submit'>Принять</button>");
                 out.println("</form>");
+
+                // Форма отклонения
+                out.println("<form action='friendship' method='POST'>");
+                out.println("<input type='hidden' name='action' value='reject_request'>");
+                out.println("<input type='hidden' name='request_id' value='" + requestId + "'>");
+                out.println("<button type='submit'>Отклонить</button>");
+                out.println("</form>");
+
                 out.println("</div>");
-            } catch (SQLException e) {
-                out.println("<p>Ошибка при обработке запроса</p>");
-                throw new RuntimeException(e);
             }
+        } catch (SQLException | ClassNotFoundException e) {
+            out.println("<p>Ошибка загрузки уведомлений</p>");
+            e.printStackTrace();
         }
     }
 }
+

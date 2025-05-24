@@ -207,19 +207,16 @@ public class SQLite {
      */
     public int getRequestId(String sender, String receiver) throws SQLException {
         String sql = "SELECT id FROM friend_requests " +
-                "WHERE ((sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?)) " +
-                "AND status = 'PENDING' LIMIT 1";
+                "WHERE sender = ? AND receiver = ? AND status = 'PENDING' LIMIT 1";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, sender);
             stmt.setString(2, receiver);
-            stmt.setString(3, receiver);
-            stmt.setString(4, sender);
-
             ResultSet rs = stmt.executeQuery();
             return rs.next() ? rs.getInt("id") : -1;
         }
     }
+
     /**
      * Проверяет, является ли пользователь отправителем запроса
      * @param potentialSender Проверяемый отправитель
@@ -252,6 +249,37 @@ public class SQLite {
         }
 
         return senders;
+    }
+    /**
+     * Получает список друзей пользователя (взаимно принятые заявки)
+     * @param username имя пользователя для которого ищем друзей
+     * @return список имен друзей
+     */
+    public List<String> getFriendsList(String username) throws SQLException, ClassNotFoundException {
+        List<String> friends = new ArrayList<>();
+        String sql = "SELECT sender, receiver FROM friend_requests " +
+                "WHERE (sender = ? OR receiver = ?) AND status = 'ACCEPTED'";
+
+        connect(); // Убедимся, что соединение установлено
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, username);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String sender = rs.getString("sender");
+                String receiver = rs.getString("receiver");
+                // Добавляем в список противоположного пользователя
+                if (sender.equals(username)) {
+                    friends.add(receiver);
+                } else {
+                    friends.add(sender);
+                }
+            }
+        }
+
+        return friends;
     }
     // Вспомогательные методы для закрытия ресурсов
     private static void closeStatement(PreparedStatement stmt) {
