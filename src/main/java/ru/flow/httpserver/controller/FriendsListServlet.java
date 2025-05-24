@@ -5,24 +5,60 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import ru.flow.httpserver.Utils.HtmlEscapingUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/friendsList")
 public class FriendsListServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         SQLite db = new SQLite();
         HttpSession session = req.getSession();
         User currentUser = (User) session.getAttribute("user");
+        PrintWriter out = resp.getWriter();
+
+        // Устанавливаем тип содержимого
+        resp.setContentType("text/html;charset=UTF-8");
+
+        // Начало HTML-документа
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Список друзей " + HtmlEscapingUtils.escapeHtml(currentUser.getUsername()) + "</title>");
+        out.println("<style>");
+        out.println(".friend { border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 5px; }");
+        out.println("</style>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h1>Список друзей</h1>");
+
+        List<String> friendsList;
         try {
-            List<String> friendsList = db.getFriendsList(currentUser.getUsername());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            friendsList = db.getFriendsList(currentUser.getUsername());
+
+            if (friendsList.isEmpty()) {
+                out.println("<p>У вас пока нет друзей.</p>");
+            } else {
+                for (String friend : friendsList) {
+                    User friendUser = db.findByUsername(friend);
+                    out.println("<div class='friend'>");
+                    out.println("<h2>" + HtmlEscapingUtils.escapeHtml(friend) + "</h2>");
+                    out.println("<p>Социальный рейтинг: " + friendUser.getSocialRating() + "</p>");
+                    out.println("</div>");
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            out.println("<p>Произошла ошибка при загрузке списка друзей.</p>");
+            e.printStackTrace();
         }
+
+        // Завершение HTML-документа
+        out.println("</body>");
+        out.println("</html>");
     }
 }
