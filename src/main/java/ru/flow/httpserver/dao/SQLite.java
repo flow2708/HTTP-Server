@@ -294,9 +294,16 @@ public class SQLite {
     }
     /**------------------------------------------------------------------------------------------------------------------**/
     /**-------------------------------------------posts--------------------------------------------------------**/
+    public boolean createPost(String username, String content) throws SQLException {
+        String sql = "INSERT INTO posts (username, content) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, content);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 
 
-    
     /**------------------------------------------------------------------------------------------------------------------**/
     // Вспомогательные методы для закрытия ресурсов
     private static void closeStatement(PreparedStatement stmt) {

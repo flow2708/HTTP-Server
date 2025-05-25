@@ -46,6 +46,8 @@ public class ProfileServlet extends HttpServlet {
         out.println("<p>Социальный рейтинг: " + user.getSocialRating() + "</p>");
         out.println("<p>Последний доступ к сессии: " + lastAccessDate + "</p>");
         out.println("<p>Страница посещена " + visitCounter + " раз</p>");
-        out.println("<a href=\"login.html\">Выйти</a>");
+        out.println("<a href='createPost.html'>Создать пост</a>");
+        out.println("<a href='login.html'>Выйти</a>");
+
     }
 }
