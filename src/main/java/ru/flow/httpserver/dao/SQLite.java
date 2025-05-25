@@ -58,13 +58,22 @@ public class SQLite {
                 + "FOREIGN KEY (sender) REFERENCES users(username) ON DELETE CASCADE,"
                 + "FOREIGN KEY (receiver) REFERENCES users(username) ON DELETE CASCADE,"
                 + "UNIQUE(sender, receiver))";
+        String createPostsTableSQL = "CREATE TABLE IF NOT EXISTS posts ("
+                + "post_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "username TEXT NOT NULL,"
+                + "content TEXT NOT NULL,"
+                + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                + "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                + "like_count INTEGER DEFAULT 0,"
+                + "FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE)";
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(createUsersTableSQL);
             stmt.execute(createFriendRequestsTableSQL);
-            System.out.println("Таблицы users, friend_requests проверены/созданы");
+            stmt.execute(createPostsTableSQL);
+            System.out.println("Таблицы users, friend_requests, posts проверены/созданы");
         }
     }
-
+    /**-------------------------------------------users--------------------------------------------------------**/
     public boolean saveUser(String username, String email, String password, int socialrating) {
         String insertUser = "INSERT INTO users (username, email, password, socialrating) VALUES (?, ?, ?, ?)";
         String hashedPassword = PasswordUtils.hashPassword(password);
@@ -112,6 +121,7 @@ public class SQLite {
         }
         return null;
     }
+    /**------------------------------------------------------------------------------------------------------------------**/
     /**-------------------------------------------friend_requests--------------------------------------------------------**/
     public boolean sendFriendRequest(String sender, String receiver) throws SQLException {
         if (sender.equals(receiver)) {
@@ -282,6 +292,11 @@ public class SQLite {
 
         return friends;
     }
+    /**------------------------------------------------------------------------------------------------------------------**/
+    /**-------------------------------------------posts--------------------------------------------------------**/
+
+
+    
     /**------------------------------------------------------------------------------------------------------------------**/
     // Вспомогательные методы для закрытия ресурсов
     private static void closeStatement(PreparedStatement stmt) {
