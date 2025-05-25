@@ -64,14 +64,6 @@
     </div>
     <button type="submit">Опубликовать</button>
   </form>
-
-  <!-- Блоки для вывода сообщений об ошибках/успехе -->
-  <% if (request.getAttribute("error") != null) { %>
-  <div class="error"><%= request.getAttribute("error") %></div>
-  <% } %>
-  <% if (request.getAttribute("success") != null) { %>
-  <div class="success"><%= request.getAttribute("success") %></div>
-  <% } %>
 </div>
 </body>
 </html>
