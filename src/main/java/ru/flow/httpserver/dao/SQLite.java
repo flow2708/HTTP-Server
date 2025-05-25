@@ -112,6 +112,7 @@ public class SQLite {
         }
         return null;
     }
+    /**-------------------------------------------friend_requests--------------------------------------------------------**/
     public boolean sendFriendRequest(String sender, String receiver) throws SQLException {
         if (sender.equals(receiver)) {
             throw new IllegalArgumentException("Нельзя отправить запрос самому себе");
@@ -281,6 +282,7 @@ public class SQLite {
 
         return friends;
     }
+    /**------------------------------------------------------------------------------------------------------------------**/
     // Вспомогательные методы для закрытия ресурсов
     private static void closeStatement(PreparedStatement stmt) {
         if (stmt != null) {
