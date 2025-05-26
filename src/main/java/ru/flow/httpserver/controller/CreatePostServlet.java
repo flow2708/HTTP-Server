@@ -26,7 +26,7 @@ public class CreatePostServlet extends HttpServlet {
         }
 
         if (content == null || content.trim().isEmpty()) {
-            resp.sendError(400, "Текст поста не может быть пустым");
+            resp.sendError(400, "Текст поста не может быть пустым!");
             return;
         }
 
@@ -34,7 +34,7 @@ public class CreatePostServlet extends HttpServlet {
             if (db.createPost(currentUser.getUsername(), content)) {
                 resp.sendRedirect("profile");
             } else {
-                resp.sendError(500, "Ошибка при создании поста");
+                resp.sendError(500, "Ошибка при создании поста!");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
