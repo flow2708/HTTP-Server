@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.flow.httpserver.Utils.PasswordUtils;
+import ru.flow.httpserver.utils.PasswordUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 

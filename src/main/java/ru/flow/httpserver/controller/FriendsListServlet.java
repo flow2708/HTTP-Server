@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import ru.flow.httpserver.Utils.HtmlEscapingUtils;
+import ru.flow.httpserver.utils.HtmlEscapingUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 

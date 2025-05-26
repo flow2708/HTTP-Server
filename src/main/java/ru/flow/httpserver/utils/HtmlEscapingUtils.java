@@ -1,4 +1,4 @@
-package ru.flow.httpserver.Utils;
+package ru.flow.httpserver.utils;
 
 public class HtmlEscapingUtils {
     public static final String escapeHtml(String input) {

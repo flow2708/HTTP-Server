@@ -1,6 +1,6 @@
 package ru.flow.httpserver.dao;
 
-import ru.flow.httpserver.Utils.PasswordUtils;
+import ru.flow.httpserver.utils.PasswordUtils;
 import ru.flow.httpserver.entities.User;
 
 import java.io.File;

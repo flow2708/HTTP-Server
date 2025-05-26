@@ -1,4 +1,4 @@
-package ru.flow.httpserver.Utils;
+package ru.flow.httpserver.utils;
 
 import org.mindrot.jbcrypt.BCrypt;
 
