@@ -6,10 +6,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
+import ru.flow.httpserver.services.HtmlBuilderService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Date;
 
 @WebServlet("/profile")
@@ -17,37 +20,53 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Проверка авторизации
         HttpSession session = req.getSession(false);
-
-        Integer visitCounter = (Integer) session.getAttribute("visitCounter");
-        long lastAccessTime = session.getLastAccessedTime();
-        Date lastAccessDate = new Date(lastAccessTime);
-
-        if(session == null || session.getAttribute("user") == null) {
+        if (session == null || session.getAttribute("user") == null) {
             resp.sendRedirect("login.html");
             return;
         }
 
-        if (visitCounter == null) {
-            visitCounter = 1;
-        } else {
-            visitCounter++;
-        }
-
-        session.setAttribute("visitCounter", visitCounter);
-        // Отображение профиля
         User user = (User) session.getAttribute("user");
-        resp.setContentType("text/html");
+        SQLite db = new SQLite();
         PrintWriter out = resp.getWriter();
-        out.println("<h1>Ваш профиль</h1>");
-        out.println("<p>Имя пользователя: " + user.getUsername() + "</p>");
-        out.println("<p>Email: " + user.getEmail() + "</p>");
-        out.println("<p>Социальный рейтинг: " + user.getSocialRating() + "</p>");
-        out.println("<p>Последний доступ к сессии: " + lastAccessDate + "</p>");
-        out.println("<p>Страница посещена " + visitCounter + " раз</p>");
-        out.println("<a href='createPost.html'>Создать пост</a>");
-        out.println("<a href='login.html'>Выйти</a>");
+        resp.setContentType("text/html;charset=UTF-8");
 
+        try {
+            // Обновление счётчика посещений
+            Integer visitCounter = (Integer) session.getAttribute("visitCounter");
+            visitCounter = (visitCounter == null) ? 1 : visitCounter + 1;
+            session.setAttribute("visitCounter", visitCounter);
+
+            // Формирование HTML-структуры
+            out.println("<!DOCTYPE html>");
+            out.println("<html lang='ru'>");
+            out.println("<head>");
+            out.println("    <meta charset='UTF-8'>");
+            out.println("    <title>Профиль</title>");
+            out.println("    <style>");
+            out.println("        .post { margin: 15px 0; padding: 10px; border: 1px solid #ddd; }");
+            out.println("        .user-avatar { background-color: #3498db; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }");
+            out.println("    </style>");
+            out.println("</head>");
+            out.println("<body>");
+            out.printf("<h1>Профиль: %s</h1>%n", user.getUsername());
+            out.printf("<p>Email: %s</p>%n", user.getEmail());
+            out.printf("<p>Рейтинг: %d</p>%n", user.getSocialRating());
+            out.printf("<p>Посещений: %d</p>%n", visitCounter);
+            out.println("<a href='createPost.html'>Создать пост</a> | <a href='logout'>Выйти</a>");
+            out.println("<h2>Ваши посты:</h2>");
+
+            // Вывод постов
+            HtmlBuilderService.renderUserPostsList(out, db, user.getUsername());
+
+            out.println("</body>");
+            out.println("</html>");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            out.println("<p style='color:red;'>Ошибка загрузки постов</p>");
+            e.printStackTrace();
+        } finally {
+            out.close();
+        }
     }
 }

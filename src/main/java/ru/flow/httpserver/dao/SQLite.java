@@ -1,5 +1,6 @@
 package ru.flow.httpserver.dao;
 
+import ru.flow.httpserver.entities.Post;
 import ru.flow.httpserver.utils.PasswordUtils;
 import ru.flow.httpserver.entities.User;
 
@@ -302,7 +303,27 @@ public class SQLite {
             return stmt.executeUpdate() > 0;
         }
     }
+    public List<Post> getUserPostsList(String username) throws SQLException, ClassNotFoundException {
+        List<Post> userPostsList = new ArrayList<>();
+        String sql = "SELECT username, content, like_count FROM posts WHERE username = ?";
 
+        connect();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Post post = new Post(
+                            rs.getString("username"),
+                            rs.getString("content"),
+                            rs.getInt("like_count")
+                    );
+                    userPostsList.add(post);
+                }
+            }
+        }
+        return userPostsList;
+    }
 
     /**------------------------------------------------------------------------------------------------------------------**/
     // Вспомогательные методы для закрытия ресурсов
