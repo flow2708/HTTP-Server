@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import ru.flow.httpserver.services.HtmlBuilderService;
 import ru.flow.httpserver.utils.HtmlEscapingUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
@@ -66,7 +67,6 @@ public class SearchServlet extends HttpServlet {
         out.println("<h2>Профиль пользователя</h2>");
         out.println("<p>Имя: " + HtmlEscapingUtils.escapeHtml(foundUser.getUsername()) + "</p>");
         out.println("<p>Социальный рейтинг: " + foundUser.getSocialRating() + "</p>");
-
         // Блок управления дружбой
         out.println("<div class='friendship-actions'>");
         switch (status) {
@@ -134,6 +134,14 @@ public class SearchServlet extends HttpServlet {
                 out.println("<button type='submit'>Отправить запрос</button>");
                 out.println("</form>");
                 break;
+        }
+        out.println("<h2>Посты:</h2>");
+        try {
+            HtmlBuilderService.renderUserPostsList(out, db, foundUser.getUsername());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         out.println("</div>");
 
