@@ -67,11 +67,20 @@ public class SQLite {
                 + "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
                 + "like_count INTEGER DEFAULT 0,"
                 + "FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE)";
+        String createCommentsTableSQL = "CREATE TABLE IF NOT EXISTS comments ("
+                + "comment_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "post_id INTEGER NOT NULL,"
+                + "username TEXT NOT NULL,"
+                + "content TEXT NOT NULL,"
+                + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                + "FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,"
+                + "FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE)";
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(createUsersTableSQL);
             stmt.execute(createFriendRequestsTableSQL);
             stmt.execute(createPostsTableSQL);
-            System.out.println("Таблицы users, friend_requests, posts проверены/созданы");
+            stmt.execute(createCommentsTableSQL);
+            System.out.println("Таблицы users, friend_requests, posts, comments проверены/созданы");
         }
     }
     /**-------------------------------------------users--------------------------------------------------------**/
@@ -324,6 +333,9 @@ public class SQLite {
         }
         return userPostsList;
     }
+
+    /**------------------------------------------------------------------------------------------------------------------**/
+    /**-------------------------------------------comments--------------------------------------------------------**/
 
     /**------------------------------------------------------------------------------------------------------------------**/
     // Вспомогательные методы для закрытия ресурсов
