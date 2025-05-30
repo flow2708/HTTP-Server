@@ -6,7 +6,7 @@ public class Comment {
     String content;
     public Comment (int post_id, String username, String content) {
         this.post_id = post_id;
-        this.userame = username;
+        this.username = username;
         this.content = content;
     }
     public int getPost_id() {
