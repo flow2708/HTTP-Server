@@ -1,5 +1,6 @@
 package ru.flow.httpserver.dao;
 
+import ru.flow.httpserver.entities.Comment;
 import ru.flow.httpserver.entities.Post;
 import ru.flow.httpserver.utils.PasswordUtils;
 import ru.flow.httpserver.entities.User;
@@ -314,7 +315,7 @@ public class SQLite {
     }
     public List<Post> getUserPostsList(String username) throws SQLException, ClassNotFoundException {
         List<Post> userPostsList = new ArrayList<>();
-        String sql = "SELECT username, content, like_count FROM posts WHERE username = ?";
+        String sql = "SELECT post_id, username, content, like_count FROM posts WHERE username = ?";
 
         connect();
 
@@ -323,6 +324,7 @@ public class SQLite {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Post post = new Post(
+                            rs.getInt("post_id"),
                             rs.getString("username"),
                             rs.getString("content"),
                             rs.getInt("like_count")
@@ -336,7 +338,36 @@ public class SQLite {
 
     /**------------------------------------------------------------------------------------------------------------------**/
     /**-------------------------------------------comments--------------------------------------------------------**/
+    public boolean createComment(int post_id, String username, String content) throws SQLException {
+        String sql = "INSERT INTO comments (post_id, username, content) VALUES (?, ?, ?) ";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, post_id);
+            stmt.setString(2, username);
+            stmt.setString(3, content);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    public List<Comment> getCommentList(int post_id) throws SQLException, ClassNotFoundException {
+        List<Comment> commentList = new ArrayList<>();
+        String sql = "SELECT post_id, username, content FROM comments WHERE post_id = ?";
 
+        connect();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, post_id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Comment comment = new Comment(
+                            rs.getInt("post_id"),
+                            rs.getString("username"),
+                            rs.getString("content")
+                    );
+                    commentList.add(comment);
+                }
+            }
+        }
+        return commentList;
+    }
     /**------------------------------------------------------------------------------------------------------------------**/
     // Вспомогательные методы для закрытия ресурсов
     private static void closeStatement(PreparedStatement stmt) {

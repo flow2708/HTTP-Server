@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import ru.flow.httpserver.utils.HtmlEscapingUtils;
+import ru.flow.httpserver.utils.HtmlUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
@@ -42,7 +42,7 @@ public class NotificationsServlet extends HttpServlet {
                 if(requestId == -1) continue; // Пропускаем невалидные запросы
 
                 out.println("<div class='notification-item'>");
-                out.println("<p>Запрос от: " + HtmlEscapingUtils.escapeHtml(sender) + "</p>");
+                out.println("<p>Запрос от: " + HtmlUtils.escapeHtml(sender) + "</p>");
 
                 // Форма принятия
                 out.println("<form action='friendship' method='POST'>");

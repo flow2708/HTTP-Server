@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import ru.flow.httpserver.utils.HtmlEscapingUtils;
+import ru.flow.httpserver.utils.HtmlUtils;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.User;
 
@@ -29,7 +29,7 @@ public class FriendsListServlet extends HttpServlet {
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Список друзей " + HtmlEscapingUtils.escapeHtml(currentUser.getUsername()) + "</title>");
+        out.println("<title>Список друзей " + HtmlUtils.escapeHtml(currentUser.getUsername()) + "</title>");
         out.println("<style>");
         out.println(".friend { border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 5px; }");
         out.println("</style>");
@@ -47,7 +47,7 @@ public class FriendsListServlet extends HttpServlet {
                 for (String friend : friendsList) {
                     User friendUser = db.findByUsername(friend);
                     out.println("<div class='friend'>");
-                    out.println("<h2>" + HtmlEscapingUtils.escapeHtml(friend) + "</h2>");
+                    out.println("<h2>" + HtmlUtils.escapeHtml(friend) + "</h2>");
                     out.println("<p>Социальный рейтинг: " + friendUser.getSocialRating() + "</p>");
                     out.println("</div>");
                 }
