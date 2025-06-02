@@ -15,7 +15,7 @@ import java.sql.SQLException;
 @WebServlet("/createComment")
 public class CreateCommentServlet extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ervletException, IOException {
         SQLite db = new SQLite();
         HttpSession session = req.getSession();
         User currentUser = (User) session.getAttribute("user");
