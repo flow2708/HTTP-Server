@@ -19,7 +19,7 @@ public class HtmlBuilderService {
         List<Post> posts = db.getUserPostsList(username);
 
         if (posts == null || posts.isEmpty()) {
-            out.println("<p>Нет постов</p>");
+            out.println("<p>Нет постов</p>"); /
             return;
         }
 
