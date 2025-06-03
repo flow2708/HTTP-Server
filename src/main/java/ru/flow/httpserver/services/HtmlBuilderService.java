@@ -1,11 +1,8 @@
 package ru.flow.httpserver.services;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.Comment;
 import ru.flow.httpserver.entities.Post;
-import ru.flow.httpserver.entities.User;
 import ru.flow.httpserver.utils.HtmlUtils;
 
 import java.io.PrintWriter;
