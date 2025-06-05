@@ -137,7 +137,7 @@ public class SearchServlet extends HttpServlet {
         }
         out.println("<h2>Посты:</h2>");
         try {
-            HtmlBuilderService.renderUserPostsList(out, db, foundUser.getUsername());
+            HtmlBuilderService.renderUserPostsList(out, db, foundUser.getUsername(), req);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {

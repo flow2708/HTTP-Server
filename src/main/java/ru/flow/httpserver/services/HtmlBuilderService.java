@@ -1,8 +1,11 @@
 package ru.flow.httpserver.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import ru.flow.httpserver.dao.SQLite;
 import ru.flow.httpserver.entities.Comment;
 import ru.flow.httpserver.entities.Post;
+import ru.flow.httpserver.entities.User;
 import ru.flow.httpserver.utils.HtmlUtils;
 
 import java.io.PrintWriter;
@@ -10,10 +13,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class HtmlBuilderService {
-    public static void renderUserPostsList(PrintWriter out, SQLite db, String username)
+    public static void renderUserPostsList(PrintWriter out, SQLite db, String username, HttpServletRequest req)
             throws SQLException, ClassNotFoundException {
 
         List<Post> posts = db.getUserPostsList(username);
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
 
         if (posts == null || posts.isEmpty()) {
             out.println("<p>Нет постов</p>");
@@ -23,12 +28,22 @@ public class HtmlBuilderService {
         out.println("<div class='posts'>");
         for (Post post : posts) {
             String firstLetter = post.getUsername().substring(0, 1).toUpperCase();
+            boolean isLiked = db.isUserLiked(post.getPost_id(), user.getUsername()); // Проверяем, лайкнул ли пользователь пост
+
             out.println("<div class='post'>");
             out.printf("<div class='user-avatar'>%s</div>", firstLetter);
             out.printf("<h3>%s</h3>", post.getUsername());
             out.printf("<p>%s</p>", post.getContent());
-            out.printf("<div>Лайков: %d</div>", post.getLike_count());
 
+            // Форма для лайка (отправляется на сервлет /like)
+            out.println("<form class='like-form' action='like' method='POST'>");
+            out.println("<input type='hidden' name='post_id' value='" + post.getPost_id() + "'>");
+            out.println("<input type='hidden' name='action' value='" + (isLiked ? "unlike" : "like") + "'>");
+            out.println("<button type='submit' class='like-btn " + (isLiked ? "liked" : "") + "'>❤️</button>");
+            out.printf("<span class='like-count'>%d</span>", post.getLike_count());
+            out.println("</form>");
+
+            // Форма для комментариев (ваш существующий код)
             out.println("<form action='comment' method='GET'>");
             out.println("<input type='hidden' name='post_id' value='" + HtmlUtils.escapeHtml(String.valueOf(post.getPost_id())) + "'>");
             out.println("<button class='comment-btn'>");
@@ -39,7 +54,7 @@ public class HtmlBuilderService {
             out.println("</button>");
             out.println("</form>");
 
-            out.println("</div>");
+            out.println("</div>"); // Закрываем div.post
         }
         out.println("</div>");
     }

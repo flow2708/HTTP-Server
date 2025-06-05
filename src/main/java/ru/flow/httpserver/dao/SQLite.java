@@ -76,12 +76,21 @@ public class SQLite {
                 + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
                 + "FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE)";
+        String createLikesTableSQL = "CREATE TABLE IF NOT EXISTS likes ("
+                + "like_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "post_id INTEGER NOT NULL,"
+                + "username TEXT NOT NULL,"
+                + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                + "FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,"
+                + "FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,"
+                + "UNIQUE(post_id, username))";
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(createUsersTableSQL);
             stmt.execute(createFriendRequestsTableSQL);
             stmt.execute(createPostsTableSQL);
             stmt.execute(createCommentsTableSQL);
-            System.out.println("Таблицы users, friend_requests, posts, comments проверены/созданы");
+            stmt.execute(createLikesTableSQL);
+            System.out.println("Таблицы users, friend_requests, posts, comments, likes проверены/созданы");
         }
     }
     /**-------------------------------------------users--------------------------------------------------------**/
@@ -335,7 +344,21 @@ public class SQLite {
         }
         return userPostsList;
     }
+    public boolean addLikeToPost(int post_id) throws SQLException {
+        String sql = "UPDATE posts SET like_count = like_count + 1 WHERE post_id = ?";
 
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, post_id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    public boolean removeLikeFromPost(int post_id) throws SQLException {
+        String sql = "UPDATE posts Set like_count = like_count - 1 WHERE post_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, post_id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
     /**------------------------------------------------------------------------------------------------------------------**/
     /**-------------------------------------------comments--------------------------------------------------------**/
     public boolean createComment(int post_id, String username, String content) throws SQLException {
@@ -369,6 +392,35 @@ public class SQLite {
         return commentList;
     }
     /**------------------------------------------------------------------------------------------------------------------**/
+    /**-------------------------------------------likes--------------------------------------------------------**/
+    public boolean createLike(int post_id, String username) throws SQLException {
+        String sql = "INSERT INTO likes (post_id, username) VALUES (?, ?) ";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, post_id);
+            stmt.setString(2, username);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    public boolean removeLike(int post_id, String username) throws SQLException {
+        String sql = "DELETE from likes WHERE post_id = ? AND username = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, post_id);
+            stmt.setString(2, username);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    public boolean isUserLiked(int post_id, String username) throws SQLException {
+        String sql = "SELECT 1 FROM likes WHERE post_id = ? AND username = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, post_id);
+            stmt.setString(2, username);
+            return stmt.executeQuery().next();
+        }
+    }
+    /**------------------------------------------------------------------------------------------------------------------**/
+
     // Вспомогательные методы для закрытия ресурсов
     private static void closeStatement(PreparedStatement stmt) {
         if (stmt != null) {

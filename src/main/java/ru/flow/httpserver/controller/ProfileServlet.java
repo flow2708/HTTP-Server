@@ -57,7 +57,7 @@ public class ProfileServlet extends HttpServlet {
             out.println("<h2>Ваши посты:</h2>");
 
             // Вывод постов
-            HtmlBuilderService.renderUserPostsList(out, db, user.getUsername());
+            HtmlBuilderService.renderUserPostsList(out, db, user.getUsername(), req);
 
             out.println("</body>");
             out.println("</html>");
